@@ -1,35 +1,34 @@
-import { randomBytes } from "crypto";
-import type { IncomingHttpHeaders } from "http2";
 import { getAPIKey } from "src/api/auth";
 import { describe, expect, test } from "vitest";
 
-describe("Test getAPI key", () => {
-  const validKey = randomBytes(32).toString("hex");
+describe("Test getAPIKey", () => {
+  test("should return null if the authorization header is not present", () => {
+    const headers = {};
+    const result = getAPIKey(headers);
+    expect(result).toBeNull();
+  });
 
-  test("valid key", () => {
-    const headers: IncomingHttpHeaders = {
-      authorization: `ApiKey ${validKey}`
-    }
+  test("should return null if the authorization header does not start with 'ApiKey'", () => {
+    const headers = {
+      authorization: "Bearer my-token",
+    };
+    const result = getAPIKey(headers);
+    expect(result).toBeNull();
+  });
 
-    const key = getAPIKey(headers)
+  test("should return null if the authorization header is malformed", () => {
+    const headers = {
+      authorization: "ApiKey",
+    };
+    const result = getAPIKey(headers);
+    expect(result).toBeNull();
+  });
 
-    expect(key).toEqual(validKey);
-  })
-
-  test("invalid key", () => {
-    const headers: IncomingHttpHeaders = {
-      authorization: `BEARER ${validKey}`
-    }
-
-    const key = getAPIKey(headers)
-
-    expect(key).toEqual(null);
-  })
-
-  test("invalid header", () => {
-    const headers: IncomingHttpHeaders = {}
-    const key = getAPIKey(headers)
-
-    expect(key).toEqual(null);
-  })
+  test("should return the API key if the authorization header is valid", () => {
+    const headers = {
+      authorization: "ApiKey valid-api-key",
+    };
+    const result = getAPIKey(headers);
+    expect(result).toBe("valid-api-key");
+  });
 })
