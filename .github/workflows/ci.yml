@@ -23,3 +23,10 @@ jobs:
       
       - name: Run tests
         run: npm run test -- --coverage
+
+    style:
+      name: Style
+
+      steps:
+        - name: format check
+          run: npm run format:check
