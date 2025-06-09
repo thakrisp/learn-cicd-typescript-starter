@@ -31,4 +31,4 @@ describe("Test getAPIKey", () => {
     const result = getAPIKey(headers);
     expect(result).toBe("valid-api-key");
   });
-})
+});
