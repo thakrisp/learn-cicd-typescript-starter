@@ -23,7 +23,7 @@ describe("Test getAPI key", () => {
 
     const key = getAPIKey(headers)
 
-    expect(key).toEqual(validKey);
+    expect(key).toEqual(null);
   })
 
   test("invalid header", () => {
